@@ -4,7 +4,7 @@
  * Embeds BullX UI in an iframe with fallback support
  */
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 
 export interface BullXEmbedProps {
   tokenAddress?: string;
@@ -12,6 +12,25 @@ export interface BullXEmbedProps {
   height?: string | number;
   className?: string;
   onError?: (error: Error) => void;
+}
+
+/**
+ * Validates and sanitizes a token address
+ * Returns null if the address is invalid
+ */
+function sanitizeTokenAddress(address: string | undefined): string | null {
+  if (!address) return null;
+  
+  // Basic validation: alphanumeric and common blockchain address characters
+  // This prevents XSS by ensuring only valid characters are used
+  const validAddressPattern = /^[a-zA-Z0-9_-]+$/;
+  
+  if (!validAddressPattern.test(address)) {
+    console.warn('Invalid token address format:', address);
+    return null;
+  }
+  
+  return address;
 }
 
 export const BullXEmbed: React.FC<BullXEmbedProps> = ({
@@ -25,8 +44,12 @@ export const BullXEmbed: React.FC<BullXEmbedProps> = ({
   const [fallbackUrl, setFallbackUrl] = useState<string | null>(null);
 
   const baseUrl = import.meta.env.VITE_BULLX_EMBED_URL || 'https://bullx.io';
-  const embedUrl = tokenAddress 
-    ? `${baseUrl}/terminal?chainId=1399811149&address=${tokenAddress}`
+  
+  // Sanitize token address to prevent XSS
+  const sanitizedAddress = useMemo(() => sanitizeTokenAddress(tokenAddress), [tokenAddress]);
+  
+  const embedUrl = sanitizedAddress
+    ? `${baseUrl}/terminal?chainId=1399811149&address=${sanitizedAddress}`
     : baseUrl;
 
   const handleIframeError = () => {
