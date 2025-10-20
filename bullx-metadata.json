@@ -1,0 +1,19 @@
+{
+  "name": "dcktoolscop",
+  "version": "0.0.0",
+  "description": "BullX metadata for repository",
+  "maintainer": {
+    "name": "kaideng55555"
+  },
+  "license": "MIT",
+  "repository": "https://github.com/kaideng55555/dcktoolscop",
+  "tags": ["devnet", "tools", "bullx"],
+  "ci": {
+    "provider": "github",
+    "workflow": ".github/workflows/ci.yml"
+  },
+  "coverage": {
+    "provider": "codecov",
+    "path": "./coverage/lcov.info"
+  }
+}
