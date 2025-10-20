@@ -5,6 +5,9 @@
  * API URL is configurable via BULLX_API_URL environment variable.
  */
 
+// Default timeout is 10 seconds
+const DEFAULT_TIMEOUT_MS = 10000;
+
 export interface BullXTokenMetadata {
   address: string;
   name?: string;
@@ -36,7 +39,7 @@ export class BullXMetadataClient {
     this.apiUrl = config.apiUrl || 
                   import.meta.env.VITE_BULLX_API_URL || 
                   'https://api.bullx.io/v1';
-    this.timeout = config.timeout || 10000; // 10 seconds default
+    this.timeout = config.timeout || DEFAULT_TIMEOUT_MS;
   }
 
   /**

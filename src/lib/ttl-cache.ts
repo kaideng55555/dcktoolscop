@@ -4,6 +4,9 @@
  * Simple cache implementation with expiration support
  */
 
+// Default TTL is 5 minutes
+const DEFAULT_TTL_MS = 5 * 60 * 1000;
+
 export interface CacheEntry<T> {
   value: T;
   expiresAt: number;
@@ -13,7 +16,7 @@ export class TTLCache<T> {
   private cache: Map<string, CacheEntry<T>>;
   private defaultTTL: number;
 
-  constructor(defaultTTL: number = 5 * 60 * 1000) { // 5 minutes default
+  constructor(defaultTTL: number = DEFAULT_TTL_MS) {
     this.cache = new Map();
     this.defaultTTL = defaultTTL;
   }

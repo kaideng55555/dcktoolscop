@@ -6,8 +6,11 @@ import { useState, useEffect, useCallback } from 'react';
 import { BullXMetadataClient, BullXTokenMetadata, defaultBullXClient } from '../lib/bullx-client';
 import { TTLCache } from '../lib/ttl-cache';
 
+// Default cache TTL is 5 minutes
+const DEFAULT_CACHE_TTL_MS = 5 * 60 * 1000;
+
 // Global cache instance shared across all hook instances
-const metadataCache = new TTLCache<BullXTokenMetadata>(5 * 60 * 1000); // 5 minutes
+const metadataCache = new TTLCache<BullXTokenMetadata>(DEFAULT_CACHE_TTL_MS);
 
 export interface UseBullXMetadataOptions {
   client?: BullXMetadataClient;
@@ -35,7 +38,7 @@ export function useBullXMetadata(
 ): UseBullXMetadataResult {
   const {
     client = defaultBullXClient,
-    cacheTTL = 5 * 60 * 1000,
+    cacheTTL = DEFAULT_CACHE_TTL_MS,
     enabled = true
   } = options;
 
