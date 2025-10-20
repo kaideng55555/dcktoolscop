@@ -6,54 +6,37 @@ type Props = {
   rpcUrl?: string; // the app's RPC url (from env or props)
 };
 
-const DangerZone: React.FC<Props> = ({ rpcUrl }) => {
-  const {
-    unlocked,
-    typedValue,
-    setTyped,
-    unlock,
-    lock,
-  } = useDangerMode();
+export default function DangerZone({ rpcUrl }: Props) {
+  const { unlocked, typedValue, setTyped, lock } = useDangerMode('UNLOCK DANGER');
+  const [provider, setProvider] = useState<'phantom' | 'solflare' | null>(null);
+  const [wallet, setWallet] = useState<any>(null);
+  const [log, setLog] = useState<string[]>([]);
 
-  const devnetOk = useMemo(() => isDevnetRpc(rpcUrl), [rpcUrl]);
+  const devnetOk = useMemo(() => isDevnetRpc(rpcUrl ?? (process.env.VITE_SOLANA_RPC_DEVNET as string)), [rpcUrl]);
 
-  const [walletConnected, setWalletConnected] = useState(false);
-
-  const tryConnectWallet = async () => {
-    const connected = await requestWalletConnection('phantom');
-    setWalletConnected(connected);
-  };
-
-  if (!devnetOk) return <div style={{ color: 'red' }}>Danger Zone disabled (devnet only)</div>;
-
-  if (!unlocked) {
-    return (
-      <div style={{ border: '1px dashed red', padding: 12 }}>
-        <p>Type unlock phrase:</p>
-        <input
-          value={typedValue}
-          onChange={(e) => setTyped(e.target.value)}
-          placeholder="UNLOCK DANGER ZONE"
-          style={{ width: '100%', padding: 8, marginTop: 8 }}
-        />
-      </div>
-    );
+  async function connect(providerId: 'phantom' | 'solflare') {
+    setProvider(providerId);
+    try {
+      const w = await requestWalletConnection(providerId);
+      if (!w) {
+        setLog(l => [...l, `Provider ${providerId} not available in page`]);
+        return;
+      }
+      if (w.connect) await w.connect();
+      setWallet(w);
+      setLog(l => [...l, `Connected ${providerId}`]);
+    } catch (err: any) {
+      setLog(l => [...l, `Connect error: ${String(err)}`]);
+    }
   }
 
-  return (
-    <div style={{ border: '2px solid red', padding: 16, marginTop: 12 }}>
-      <p style={{ fontWeight: 'bold' }}>🚨 Danger Zone Unlocked</p>
-      {!walletConnected ? (
-        <button onClick={tryConnectWallet}>Connect Wallet</button>
-      ) : (
-        <p>✅ Wallet Connected</p>
-      )}
-      {/* Placeholder for mint/burn/freeze actions */}
-      <button style={{ marginTop: 12 }} onClick={lock}>
-        Lock Danger Zone
-      </button>
-    </div>
-  );
-};
+  function requireDevnet(): boolean {
+    if (!devnetOk) {
+      setLog(l => [...l, 'Danger Zone actions are allowed only on devnet.']);
+      return false;
+    }
+    return true;
+  }
 
-export default DangerZone;
+  async function confirmAndRun(actionName: string, fn: () => Promise<void>) {
+    const confirmText = prompt(`Type \
