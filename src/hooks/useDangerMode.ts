@@ -4,30 +4,33 @@ import { useEffect, useState } from 'react';
  * useDangerMode
  * - Typed unlock flow for Danger Zone.
  * - Returns { unlocked, unlock, lock, typedValue, setTyped }.
+ *
+ * default phrase: 'UNLOCK DANGER'
  */
-export default function useDangerMode(passphrase = 'UNLOCK DANGER ZONE') {
+
+export function useDangerMode(requiredPhrase = 'UNLOCK DANGER') {
   const [typed, setTyped] = useState('');
   const [unlocked, setUnlocked] = useState(false);
 
   useEffect(() => {
-    if (typed.trim().toUpperCase() === passphrase.toUpperCase()) {
+    if (unlocked) return;
+    if (typed === requiredPhrase) {
       setUnlocked(true);
-    } else {
-      setUnlocked(false);
     }
-  }, [typed, passphrase]);
+  }, [typed, requiredPhrase, unlocked]);
 
-  const unlock = () => setUnlocked(true);
-  const lock = () => {
+  function unlock(value?: string) {
+    if (value !== undefined) {
+      setTyped(value);
+      if (value === requiredPhrase) setUnlocked(true);
+    }
+  }
+  function lock() {
     setTyped('');
     setUnlocked(false);
-  };
+  }
 
-  return {
-    unlocked,
-    typedValue: typed,
-    setTyped,
-    unlock,
-    lock,
-  };
+  return { unlocked, typedValue: typed, setTyped, unlock, lock };
 }
+
+export default useDangerMode;
