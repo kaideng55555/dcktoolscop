@@ -39,4 +39,5 @@ export default function DangerZone({ rpcUrl }: Props) {
   }
 
   async function confirmAndRun(actionName: string, fn: () => Promise<void>) {
+    // Correct prompt formatting
     const confirmText = prompt(`Type \
