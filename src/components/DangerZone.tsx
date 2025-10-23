@@ -31,7 +31,7 @@ export const DangerZone: React.FC<DangerZoneProps> = ({
   onNetworkChange,
   className = '',
 }) => {
-  const [currentNetwork, setCurrentNetwork] = useState<NetworkType>(network);
+  const [currentNetwork, setCurrentNetwork] = useState<NetworkType>(defaultNetwork);
   const [isUnlocked, setIsUnlocked] = useState(!requireConfirmation);
   const [confirmChecked, setConfirmChecked] = useState(false);
 
