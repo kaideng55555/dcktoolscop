@@ -36,8 +36,8 @@ export class BullXMetadataClient {
 
   constructor(config: BullXClientConfig = {}) {
     // Use environment variable or fallback to default
-    this.apiUrl = config.apiUrl || 
-                  import.meta.env.VITE_BULLX_API_URL || 
+    this.apiUrl = config.apiUrl ?? 
+                  import.meta.env.VITE_BULLX_API_URL ?? 
                   'https://api.bullx.io/v1';
     this.timeout = config.timeout || DEFAULT_TIMEOUT_MS;
   }
