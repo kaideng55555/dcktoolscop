@@ -20,16 +20,16 @@ export interface BullXEmbedProps {
  */
 function sanitizeTokenAddress(address: string | undefined): string | null {
   if (!address) return null;
-  
-  // Basic validation: alphanumeric and common blockchain address characters
-  // This prevents XSS by ensuring only valid characters are used
-  const validAddressPattern = /^[a-zA-Z0-9_-]+$/;
-  
-  if (!validAddressPattern.test(address)) {
+
+  // Strict validation for Ethereum and Solana addresses
+  // Ethereum: 0x followed by 40 hex chars; Solana: base58, 32-44 chars
+  const ethPattern = /^0x[a-fA-F0-9]{40}$/;
+  const solPattern = /^[1-9A-HJ-NP-Za-km-z]{32,44}$/;
+
+  if (!(ethPattern.test(address) || solPattern.test(address))) {
     console.warn('Invalid token address format:', address);
     return null;
   }
-  
   return address;
 }
 
