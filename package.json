@@ -1,0 +1,8 @@
+{
+  "devDependencies": {
+    "@vitest/coverage-v8": "^4.0.2"
+  },
+  "scripts": {
+    "test": "vitest --coverage.enabled --coverage.reporter=text --coverage.reporter=html --coverage.reporter=lcov"
+  }
+}
