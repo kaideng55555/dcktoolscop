@@ -1,6 +1,6 @@
 name: CI Pipeline
 on:
-  push: { branches: [ main, fix/ci-secrets, fix/ci-setup ] }
+  push: { branches: [ main ] }
   pull_request: { branches: [ main ] }
   workflow_dispatch:
 jobs:
