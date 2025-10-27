@@ -3,8 +3,7 @@
   "version": "1.0.0",
   "description": "DCK Tools with BullX metadata integration",
   "type": "module",
-  "scripts": {
-    "dev": "vite",
+  "scripts": {"postbuild": "bash ./update-timestamp.sh dist/index.html"    "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "test": "vitest",
