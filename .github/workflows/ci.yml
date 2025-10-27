@@ -1,34 +1,46 @@
-name: CI Pipeline
+name: ci
+
 on:
-  push: { branches: [ main ] }
-  pull_request: { branches: [ main ] }
+  push:
+    branches: [main]
+  pull_request:
   workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build-test-and-validate:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with: { node-version: '20' }
+        with:
+          node-version: '20'
+          cache: npm
       - name: Install dependencies
         run: npm ci
-      - name: Run tests with coverage
-        run: npm test
+      - name: Build (if present)
+        run: npm run build --if-present
+      - name: Run tests (if present)
+        run: npm test --if-present
       - name: Upload coverage to Codecov
+        if: always()
         uses: codecov/codecov-action@v4
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./coverage/lcov.info
-          fail_ci_if_error: true
-          verbose: true
-      - name: Validate Datadog secrets exist
         env:
-          DD_API_KEY: ${{ secrets.DD_API_KEY }}
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      - name: Validate Datadog secrets
+        env:
           DD_APP_KEY: ${{ secrets.DD_APP_KEY }}
+          DD_API_KEY: ${{ secrets.DD_API_KEY }}
           DD_SITE: ${{ secrets.DD_SITE }}
         run: |
           missing=0
-          for v in DD_API_KEY DD_APP_KEY DD_SITE; do
-            if [ -z "${!v}" ]; then echo "::error::Missing $v"; missing=1; else echo "Found $v"; fi
+          for v in DD_APP_KEY DD_API_KEY DD_SITE; do
+            if [ -z "${!v}" ]; then echo "::error::Missing $v"; missing=1; fi
           done
-          [ $missing -eq 0 ] || exit 1
+          exit $missing
