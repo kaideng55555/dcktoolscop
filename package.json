@@ -1,4 +1,9 @@
 {
+  "devDependencies": {
+    "@vitest/coverage-v8": "^4.0.2"
+  },
+  "scripts": {
+    "test": "vitest --coverage.enabled --coverage.reporter=text --coverage.reporter=html --coverage.reporter=lcov"
   "name": "dcktoolscop",
   "version": "1.0.0",
   "description": "DCK Tools with BullX metadata integration",
