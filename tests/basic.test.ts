@@ -109,7 +109,7 @@ describe('Danger Actions', () => {
 
   describe('simulatedFreeze', () => {
     it('should succeed with devnet RPC', async () => {
-      const result = await simulatedFreeze({ rpcUrl: devnetRpc, tokenAddress: '0x123' });
+      const result = await simulatedFreeze({ rpcUrl: devnetRpc, tokenAddress: '11111111111111111111111111111112' });
       
       expect(result.success).toBe(true);
       expect(result.action).toBe('freeze');
@@ -119,14 +119,14 @@ describe('Danger Actions', () => {
 
     it('should throw error with mainnet RPC', async () => {
       await expect(
-        simulatedFreeze({ rpcUrl: mainnetRpc, tokenAddress: '0x123' })
+        simulatedFreeze({ rpcUrl: mainnetRpc, tokenAddress: '11111111111111111111111111111112' })
       ).rejects.toThrow('Danger Zone actions are allowed only on devnet');
     });
   });
 
   describe('simulatedThaw', () => {
     it('should succeed with devnet RPC', async () => {
-      const result = await simulatedThaw({ rpcUrl: devnetRpc, tokenAddress: '0x123' });
+      const result = await simulatedThaw({ rpcUrl: devnetRpc, tokenAddress: '11111111111111111111111111111112' });
       
       expect(result.success).toBe(true);
       expect(result.action).toBe('thaw');
@@ -136,7 +136,7 @@ describe('Danger Actions', () => {
 
     it('should throw error with mainnet RPC', async () => {
       await expect(
-        simulatedThaw({ rpcUrl: mainnetRpc, tokenAddress: '0x123' })
+        simulatedThaw({ rpcUrl: mainnetRpc, tokenAddress: '11111111111111111111111111111112' })
       ).rejects.toThrow('Danger Zone actions are allowed only on devnet');
     });
   });
