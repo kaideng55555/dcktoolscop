@@ -15,12 +15,24 @@ describe('BullXEmbed', () => {
     expect(iframe?.getAttribute('title')).toBe('BullX Terminal');
   });
 
-  it('should render iframe with token address', () => {
-    const tokenAddress = '0x123abc';
+  it('should render iframe with Solana token address', () => {
+    const tokenAddress = 'So11111111111111111111111111111111111111112';
     render(<BullXEmbed tokenAddress={tokenAddress} />);
     
     const iframe = document.querySelector('iframe');
     expect(iframe?.getAttribute('src')).toContain(tokenAddress);
+  });
+
+  it('should reject Ethereum addresses and use base URL', () => {
+    const tokenAddress = '0x1234567890123456789012345678901234567890';
+    render(<BullXEmbed tokenAddress={tokenAddress} />);
+    
+    const iframe = document.querySelector('iframe');
+    const src = iframe?.getAttribute('src');
+    // Should not contain the Ethereum address
+    expect(src).not.toContain(tokenAddress);
+    // Should fall back to base URL
+    expect(src).toBe('https://bullx.io');
   });
 
   it('should apply custom width and height', () => {
