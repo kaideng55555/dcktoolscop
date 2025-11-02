@@ -23,7 +23,7 @@ export interface DangerZoneProps {
 export const DangerZone: React.FC<DangerZoneProps> = ({
   title = 'Danger Zone',
   description = 'Actions in this section can result in on-chain transactions.',
-  network = 'devnet',
+  network: _network = 'devnet', // eslint-disable-line @typescript-eslint/no-unused-vars
   defaultNetwork = 'devnet',
   requireConfirmation = true,
   confirmText = 'I understand this will execute on-chain',
