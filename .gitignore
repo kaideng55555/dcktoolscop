@@ -37,3 +37,10 @@ lerna-debug.log*
 
 # Vitest
 .vitest
+node_modules/
+package-lock.json
+.DS_Store
+.vercel/
+dcktoolscop-backup/
+dcktoolscop/
+FETCH_HEAD
