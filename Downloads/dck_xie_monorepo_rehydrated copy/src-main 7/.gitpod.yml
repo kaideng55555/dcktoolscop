@@ -1,0 +1,13 @@
+image: node:18
+
+tasks:
+  - init: yarn install
+    command: yarn dev
+
+ports:
+  - port: 5173
+    onOpen: open-preview
+
+env:
+  VITE_SOLANA_RPC: "https://wispy-purple-cloud.solana-mainnet.quiknode.pro/f96d6af1655da56c22e185d732801d7664692a9f/"
+  VITE_SOLANA_WSS: "wss://wispy-purple-cloud.solana-mainnet.quiknode.pro/f96d6af1655da56c22e185d732801d7664692a9f/"
